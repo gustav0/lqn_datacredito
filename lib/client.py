@@ -10,6 +10,7 @@ from zeep import Client, Transport
 from zeep.wsse.signature import Signature
 from zeep.wsse.username import UsernameToken
 from zeep.wsse.utils import WSU
+from zeep.exceptions import Fault
 
 from lib.conf import ENVIRONMENT_VARIABLE, settings
 
@@ -18,12 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 try:
-# breakpoint()
+    
     certfile_path = os.path.join(BASE_DIR, getattr(settings, "CERTIFICATE_PATH"))
     key_file_path = os.path.join(BASE_DIR, getattr(settings, "KEY_PATH"))
     datacredito_username = getattr(settings, "DATACREDITO_USERNAME")
     datacredito_password = getattr(settings, "DATACREDITO_PASSWORD")
-
+    # breakpoint()
 except AttributeError:
     raise Exception(
         f"""
@@ -44,8 +45,8 @@ class CustomSignature(object):
 
     def verify(self, _envelope):
         pass
-    
-    
+
+
 @dataclass
 class DataCreditoResponse:
     raw_body: str
@@ -113,3 +114,18 @@ class DataCreditoClient:
                 _soapheaders=None,
             ),
         )
+
+
+def capture_soap_error(function):
+    def wrapper(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except Fault as error:
+            raise
+            return render_soap_error(error, from_function=function.__name__)
+        # except Exception as error:
+        #     # raise
+        #     print(traceback.format_exc())
+        #     return build_reply_message(True, f"{type(error)}: {str(error)}", None, from_function=function.__name__)
+
+    return wrapper

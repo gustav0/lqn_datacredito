@@ -15,7 +15,6 @@ class Settings:
                 setattr(self, attribute, getattr(default_settings, attribute))
 
         custom_settings = os.environ.get(ENVIRONMENT_VARIABLE)
-        breakpoint()
 
         if custom_settings:
             custom_settings_mod = importlib.import_module(custom_settings)

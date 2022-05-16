@@ -134,3 +134,4 @@ CERTIFICATE_PATH = "lqn_soap_datacredito/pem/certificate.pem"
 KEY_PATH = "lqn_soap_datacredito/pem/key.pem"
 
 EXPIRES_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+

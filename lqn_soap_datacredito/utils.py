@@ -10,3 +10,6 @@ def lqn_datacredito_client():
         raise Exception("No fue posible cargar el modulo de datacredito")
 
     return DataCreditoClient()
+
+
+
