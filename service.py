@@ -1,4 +1,6 @@
-from lqn_soap_datacredito.utils import lqn_datacredito_client
+import json
+
+from lqn_soap_datacredito.utils import lqn_datacredito_client, pretty_dict
 
 def handler(event, context):
     client = lqn_datacredito_client()
@@ -7,21 +9,23 @@ def handler(event, context):
     result = {"error": True, "message": "Ningun servicio utilizado"}
     if service == "consultar_historial":
         result = client.consultar_hc2(data)
-    return result
+        
+    return json.dumps(result.dict())
+        
+# CONSULTA = {
+#     "service": "consultar_historial",
+#     "data":{
+#         "clave": "02ZOG",
+#         "identificacion": "72541735",
+#         "primerApellido": "FONTECHAn",
+#         "producto": "64",
+#         "tipoIdentificacion": "1",
+#         "usuario": "900986913",
+#     }
+# }
 
+# resultado = handler(CONSULTA, None)
 
-CONSULTA = {
-    "service": "consultar_historial",
-    "data":{
-        "clave": "02ZOG",
-        "identificacion": "7254173",
-        "primerApellido": "FONTECHA",
-        "producto": "64",
-        "tipoIdentificacion": "1",
-        "usuario": "900986913",
-    }
-}
+# # result = pretty_dict(resultado)
 
-resultado = handler(CONSULTA, None)
-
-print(resultado.dict())
+# print(resultado)

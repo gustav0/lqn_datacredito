@@ -1,4 +1,5 @@
 import os
+import json
 
 
 def lqn_datacredito_client():
@@ -12,4 +13,6 @@ def lqn_datacredito_client():
     return DataCreditoClient()
 
 
+def pretty_dict(self, **kwargs):
+    return json.dumps(self.dict(**kwargs), indent=2)
 

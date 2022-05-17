@@ -16,6 +16,14 @@ from lib.conf import ENVIRONMENT_VARIABLE, settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+SOLICITUD_CAMPOS_REQUERIDOS =[
+    "clave",
+    "identificacion",
+    "primerApellido",
+    "producto",
+    "tipoIdentificacion",
+    "usuario",
+]
 
 
 try:
@@ -108,12 +116,21 @@ class DataCreditoClient:
         )
 
     def consultar_hc2(self, solicitud: dict) -> DataCreditoResponse:
+        self.validar_campo_solicitud(solicitud)            
+            
         return DataCreditoResponse(
             raw_body=self.client.service.consultarHC2(
                 solicitud=solicitud,
                 _soapheaders=None,
             ),
         )
+
+    def validar_campo_solicitud(self, solicitud):
+        campos_requeridos = set(SOLICITUD_CAMPOS_REQUERIDOS)
+        campos_solicitud = set(solicitud.keys())
+        
+        if  campos_requeridos - campos_solicitud:
+            raise Exception("Campos requeridos no encontrados")
 
 
 def capture_soap_error(function):
