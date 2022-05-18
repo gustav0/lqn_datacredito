@@ -16,16 +16,16 @@ def handler(event, context):
 #     "service": "consultar_historial",
 #     "data":{
 #         "clave": "02ZOG",
-#         "identificacion": "72541735",
-#         "primerApellido": "FONTECHAn",
+#         "identificacion": "9865790",
+#         "primerApellido": "ARANGO",
 #         "producto": "64",
-#         "tipoIdentificacion": "1",
+#         "tipoIdentificacion": "2",
 #         "usuario": "900986913",
 #     }
 # }
 
 # resultado = handler(CONSULTA, None)
 
-# # result = pretty_dict(resultado)
+# # result = pretty_dict(resultado.dict())
 
 # print(resultado)
