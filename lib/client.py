@@ -12,11 +12,11 @@ from zeep.wsse.username import UsernameToken
 from zeep.wsse.utils import WSU
 from zeep.exceptions import Fault
 
-from lib.conf import ENVIRONMENT_VARIABLE, settings
+from lib import settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SOLICITUD_CAMPOS_REQUERIDOS =[
+SOLICITUD_CAMPOS_REQUERIDOS = [
     "clave",
     "identificacion",
     "primerApellido",
@@ -24,22 +24,6 @@ SOLICITUD_CAMPOS_REQUERIDOS =[
     "tipoIdentificacion",
     "usuario",
 ]
-
-
-try:
-    
-    certfile_path = os.path.join(BASE_DIR, getattr(settings, "CERTIFICATE_PATH"))
-    key_file_path = os.path.join(BASE_DIR, getattr(settings, "KEY_PATH"))
-    datacredito_username = getattr(settings, "DATACREDITO_USERNAME")
-    datacredito_password = getattr(settings, "DATACREDITO_PASSWORD")
-    # breakpoint()
-except AttributeError:
-    raise Exception(
-        f"""
-        Asegurese de agregar la variable de entorno {ENVIRONMENT_VARIABLE} con el PATH a su configuracion (ej: "lqn_datacredito.settings").
-        En su archivo de configuracion agregue las constantes (CERTIFICATE_PATH, KEY_PATH, DATACREDITO_USERNAME, DATACREDITO_PASSWORD)
-        """
-    )
 
 
 class CustomSignature(object):
@@ -67,15 +51,15 @@ class DataCreditoResponse:
 class DataCreditoClient:
     def __init__(self) -> None:
         self.client = Client(
-            getattr(settings, "DATACREDITO_WSDL_URL"),
+            getattr(settings, "WSDL"),
             wsse=self.custom_signature(),
             transport=self.transport(),
         )
 
     def custom_signature(self) -> CustomSignature:
         signature = Signature(
-            certfile=certfile_path,
-            key_file=key_file_path,
+            certfile=settings.CERTIFICATE_PATH,
+            key_file=settings.KEY_PATH,
         )
 
         return CustomSignature(
@@ -91,8 +75,8 @@ class DataCreditoClient:
         session.verify = False
 
         session.cert = (
-            certfile_path,
-            key_file_path,
+            settings.CERTIFICATE_PATH,
+            settings.KEY_PATH,
         )
 
         return Transport(session=session)
@@ -110,14 +94,14 @@ class DataCreditoClient:
         timestamp_token.extend(timestamp_elements)
 
         return UsernameToken(
-            datacredito_username,
-            datacredito_password,
+            settings.USERNAME,
+            settings.PASSWORD,
             timestamp_token=timestamp_token,
         )
 
     def consultar_hc2(self, solicitud: dict) -> DataCreditoResponse:
-        self.validar_campo_solicitud(solicitud)            
-            
+        self.validar_campo_solicitud(solicitud)
+
         return DataCreditoResponse(
             raw_body=self.client.service.consultarHC2(
                 solicitud=solicitud,
@@ -128,8 +112,8 @@ class DataCreditoClient:
     def validar_campo_solicitud(self, solicitud):
         campos_requeridos = set(SOLICITUD_CAMPOS_REQUERIDOS)
         campos_solicitud = set(solicitud.keys())
-        
-        if  campos_requeridos - campos_solicitud:
+
+        if campos_requeridos - campos_solicitud:
             raise Exception("Campos requeridos no encontrados")
 
 
