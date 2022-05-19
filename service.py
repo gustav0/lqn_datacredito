@@ -12,20 +12,20 @@ def handler(event, context):
         
     return json.dumps(result.dict())
         
-# CONSULTA = {
-#     "service": "consultar_historial",
-#     "data":{
-#         "clave": "02ZOG",
-#         "identificacion": "9865790",
-#         "primerApellido": "ARANGO",
-#         "producto": "64",
-#         "tipoIdentificacion": "2",
-#         "usuario": "900986913",
-#     }
-# }
+CONSULTA = {
+    "service": "consultar_historial",
+    "data":{
+        "clave": "02ZOG",
+        "identificacion": "6469739",
+        "primerApellido": "ALFONSO",
+        "producto": "64",
+        "tipoIdentificacion": "1",
+        "usuario": "900986913",
+    }
+}
 
-# resultado = handler(CONSULTA, None)
+resultado = handler(CONSULTA, None)
 
-# # result = pretty_dict(resultado.dict())
+# result = pretty_dict(resultado.dict())
 
-# print(resultado)
+print(resultado)
