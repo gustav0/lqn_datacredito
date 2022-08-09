@@ -100,6 +100,7 @@ class DataCreditoClient:
         )
 
     def consultar_hc2(self, solicitud: dict) -> DataCreditoResponse:
+        self.agregar_user_password(solicitud)
         self.validar_campo_solicitud(solicitud)
 
         return DataCreditoResponse(
@@ -109,10 +110,14 @@ class DataCreditoClient:
             ),
         )
 
+    def agregar_user_password(self, solicitud: dict) -> None:
+        solicitud.update(
+            {"usuario": settings.USERNAME.split("-")[1], "clave": settings.SHORT_PASSWORD, "producto": "64"}
+        )
+
     def validar_campo_solicitud(self, solicitud):
         campos_requeridos = set(SOLICITUD_CAMPOS_REQUERIDOS)
         campos_solicitud = set(solicitud.keys())
-
         if campos_requeridos - campos_solicitud:
             raise Exception("Campos requeridos no encontrados")
 
@@ -122,8 +127,9 @@ def capture_soap_error(function):
         try:
             return function(*args, **kwargs)
         except Fault as error:
-            raise
-            return render_soap_error(error, from_function=function.__name__)
+            print(error)
+            raise  # TODO cómo llega el formato del error?
+            # return render_soap_error(error, from_function=function.__name__)
         # except Exception as error:
         #     # raise
         #     print(traceback.format_exc())

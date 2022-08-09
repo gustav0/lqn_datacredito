@@ -6,11 +6,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV = os.getenv("APP_ENV", default="DEV")
 
 if ENV == "PRD":
-    WSDL = "lib/wsdl/credifamilia-prd.wsdl"
+    WSDL = "https://servicesesb.datacredito.com.co/wss/dhws3/services/DHServicePlus?wsdl"
 else:
     WSDL = "https://demo-servicesesb.datacredito.com.co/wss/dhws3/services/DHServicePlus?WSDL"
 
-
+WSDL = os.getenv("WSDL", default=WSDL)
 EXPIRES_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 sentry_sdk.init(
@@ -20,8 +20,9 @@ sentry_sdk.init(
     environment=ENV,
 )
 
-USERNAME = "2-900986913"  # TODO: os.getenv('USERNAME')
-PASSWORD = "gq4Yum7e4Fry"
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
+SHORT_PASSWORD = os.getenv("SHORT_PASSWORD")
 
 CERTIFICATE_PATH = os.path.join(BASE_DIR, "lib", "certs", "certificate.pem")
 KEY_PATH = os.path.join(BASE_DIR, "lib", "certs", "key.pem")
