@@ -120,19 +120,3 @@ class DataCreditoClient:
         campos_solicitud = set(solicitud.keys())
         if campos_requeridos - campos_solicitud:
             raise Exception("Campos requeridos no encontrados")
-
-
-def capture_soap_error(function):
-    def wrapper(*args, **kwargs):
-        try:
-            return function(*args, **kwargs)
-        except Fault as error:
-            print(error)
-            raise  # TODO cómo llega el formato del error?
-            # return render_soap_error(error, from_function=function.__name__)
-        # except Exception as error:
-        #     # raise
-        #     print(traceback.format_exc())
-        #     return build_reply_message(True, f"{type(error)}: {str(error)}", None, from_function=function.__name__)
-
-    return wrapper
