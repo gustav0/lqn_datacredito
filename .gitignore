@@ -1,6 +1,6 @@
 .idea
 dist
 .aws
-.pyc
+*.pyc
 .env
 *__pycache__*
