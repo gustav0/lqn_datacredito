@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import re
 from dataclasses import dataclass
 from html import unescape
 
@@ -10,7 +11,6 @@ from zeep import Client, Transport
 from zeep.wsse.signature import Signature
 from zeep.wsse.username import UsernameToken
 from zeep.wsse.utils import WSU
-from zeep.exceptions import Fault
 
 from lib import settings
 
@@ -44,7 +44,11 @@ class DataCreditoResponse:
     raw_body: str
 
     def dict(self) -> dict:
-        json_resp = json.dumps(xmltodict.parse(unescape(self.raw_body)))
+        body = str(self.raw_body)
+        unescaped_body = unescape(body)
+        content = re.sub("&", "&amp;", unescaped_body)
+        parsed = xmltodict.parse(content, encoding="utf-8")
+        json_resp = json.dumps(parsed)
         return json.loads(json_resp)
 
 
